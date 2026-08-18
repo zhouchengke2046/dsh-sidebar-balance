@@ -1,0 +1,8 @@
+# dsh-sidebar-balance — profile bundle patch.
+#
+# Installs via `dsh plugin --profile web add <此目录>`; because package.json
+# declares `dsh.bundle.patch`, the CLI reconciles this package into the
+# profile's `dsh.profile.bundles` layer stack automatically.
+- insert:
+    - id: dsh-sidebar-balance
+      name: dsh-sidebar-balance
