@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # Syntax sanity of the hand-authored ESM host + browser bundle.
+      - run: node --check lib/index.js && node --check lib/client.js
+      # Manifest contract: dsh.bundle.patch declared, referenced files exist,
+      # package.json parses.
+      - name: validate manifest + files
+        run: |
+          node -e '
+            const fs = require("fs");
+            const p = JSON.parse(fs.readFileSync("package.json", "utf8"));
+            if (!p.dsh || !p.dsh.bundle || !p.dsh.bundle.patch) {
+              console.error("missing dsh.bundle.patch"); process.exit(1);
+            }
+            if (!p.dsh.client || p.dsh.client.platform !== "web") {
+              console.error("missing dsh.client.platform=web"); process.exit(1);
+            }
+            ["lib/index.js", "lib/client.js", "cordis.patch.yml", p.dsh.bundle.patch]
+              .forEach((f) => fs.accessSync(f));
+            console.log("manifest + files OK");
+          '
+      # Ensure the published file set is correct.
+      - run: npm pack --dry-run
