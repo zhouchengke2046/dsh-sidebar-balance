@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>dsh-sidebar-balance · 界面预览</title>
+<meta name="description" content="dsh-sidebar-balance 插件的独立视觉预览:侧边栏常驻行 + 磨砂玻璃悬浮卡(模拟数据)。" />
+<style>
+  /* ── 近似 DSH 设计令牌(独立预览用;真实插件内使用原生 --dsw-alias-* 变量) ── */
+  :root {
+    --dsw-alias-label-primary:#1f2328; --dsw-alias-label-secondary:#5b6470;
+    --dsw-alias-label-tertiary:#8c959f; --dsw-alias-border-l2:#e3e7ec;
+    --dsw-alias-interactive-bg-hover:rgba(127,137,154,.08);
+    --dsw-alias-bg-layer-2:#ffffff; --dsw-alias-bg-layer-1:#f6f8fa;
+    --dsw-alias-brand-primary:#3b82f6;
+    --dsw-alias-state-success-primary:#16a34a; --dsw-alias-state-warn-primary:#d97706;
+    --dsw-alias-state-error-primary:#dc2626;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --dsw-alias-label-primary:#e6e9ee; --dsw-alias-label-secondary:#9aa3b1;
+      --dsw-alias-label-tertiary:#6b7483; --dsw-alias-border-l2:#2c3340;
+      --dsw-alias-interactive-bg-hover:rgba(148,160,180,.10);
+      --dsw-alias-bg-layer-2:#171b22; --dsw-alias-bg-layer-1:#10141a;
+      --dsw-alias-brand-primary:#5b9bff;
+      --dsw-alias-state-success-primary:#34d399; --dsw-alias-state-warn-primary:#fbbf24;
+      --dsw-alias-state-error-primary:#f87171;
+      color-scheme: dark;
+    }
+  }
+
+  /* ── 插件样式(与 lib/client.js 中一致,含动画) ── */
+  body { margin:0; background:var(--dsw-alias-bg-layer-1); color:var(--dsw-alias-label-primary);
+         font: 14px/1.5 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+
+  .stage { display:flex; gap:40px; padding:48px; align-items:flex-start; flex-wrap:wrap; }
+  .card { width:280px; border-radius:12px; overflow:hidden;
+          background:var(--dsw-alias-bg-layer-2); border:1px solid var(--dsw-alias-border-l2);
+          box-shadow:0 8px 32px rgba(0,0,0,.10); }
+  .card h2 { font-size:12px; font-weight:600; color:var(--dsw-alias-label-tertiary);
+             padding:10px 12px 0; margin:0 0 6px; letter-spacing:.04em; }
+  .psb-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-width:0;
+            box-sizing:border-box; padding:9px 12px; border-top:1px solid var(--dsw-alias-border-l2);}
+  .psb-left{display:flex;align-items:center;gap:6px;min-width:0;color:var(--dsw-alias-label-primary)}
+  .psb-left svg{flex:none;opacity:.9}
+  .psb-label{font-size:12px;line-height:18px;font-weight:500;white-space:nowrap}
+  .psb-amt{display:flex;align-items:center;gap:5px;flex:none;font-size:12px;line-height:18px;font-weight:600;
+           color:var(--dsw-alias-label-primary);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .psb-dot{width:6px;height:6px;border-radius:50%;flex:none}
+  .psb-ring{flex:none}
+  .psb-num{display:inline-block;white-space:nowrap}
+
+  .tip-wrap{position:relative;padding-top:170px}
+  .psb-tip{width:280px;box-sizing:border-box;padding:14px 14px 12px;border-radius:14px;
+    background:color-mix(in srgb, var(--dsw-alias-bg-layer-2) 76%, transparent);
+    -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+    border:1px solid color-mix(in srgb, var(--dsw-alias-border-l2) 55%, transparent);
+    box-shadow:0 4px 12px rgba(0,0,0,.10),0 20px 48px rgba(0,0,0,.22);
+    color:var(--dsw-alias-label-primary);font-size:12px;line-height:18px;
+    display:grid; gap:0; filter:drop-shadow(0 0 0 transparent);}
+  .psb-tip-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .psb-tip-title{display:flex;align-items:center;gap:6px;font-size:12px;line-height:18px;font-weight:600}
+  .psb-tip-title svg{color:var(--dsw-alias-brand-primary)}
+  .psb-refresh{cursor:pointer;border:none;background:none;padding:3px;margin:0;border-radius:6px;
+    color:var(--dsw-alias-label-secondary);display:flex;align-items:center}
+  .psb-ds-card{background:color-mix(in srgb, var(--dsw-alias-bg-layer-1) 72%, transparent);
+    border:1px solid color-mix(in srgb, var(--dsw-alias-border-l2) 50%, transparent);
+    border-radius:10px;padding:10px 12px;margin-bottom:10px}
+  .psb-ds-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+  .psb-ds-lbl{font-size:11px;line-height:16px;font-weight:500;color:var(--dsw-alias-label-tertiary)}
+  .psb-ds-status{font-size:10px;line-height:16px;padding:0 8px;border-radius:8px;
+    background:color-mix(in srgb, var(--dsw-alias-state-success-primary) 16%, transparent);
+    color:var(--dsw-alias-state-success-primary);font-weight:600}
+  .psb-ds-amt{display:flex;align-items:center;gap:8px;font-size:22px;line-height:28px;font-weight:700;
+    font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .psb-ds-amt .sym{font-size:13px;font-weight:600;color:var(--dsw-alias-label-secondary)}
+  .psb-ds-sub{display:flex;gap:14px;margin-top:3px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary)}
+  .psb-ds-sub b{font-weight:600;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+  .psb-sec-title{font-size:11px;line-height:16px;font-weight:600;color:var(--dsw-alias-label-secondary);margin-bottom:8px}
+  .psb-go-row{display:flex;flex-direction:column;margin-bottom:9px}
+  .psb-go-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:4px}
+  .psb-go-name{font-size:11px;line-height:15px;color:var(--dsw-alias-label-secondary)}
+  .psb-go-pct{font-size:11px;line-height:15px;font-weight:600;font-variant-numeric:tabular-nums}
+  .psb-track{box-sizing:border-box;height:5px;border-radius:3px;
+    background:color-mix(in srgb, var(--dsw-alias-border-l2) 65%, transparent);overflow:hidden;margin-bottom:3px}
+  .psb-fill{height:100%;border-radius:3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.22);
+    transition:width .4s ease}
+  .psb-meta{display:flex;justify-content:flex-end;font-size:10px;line-height:14px;color:var(--dsw-alias-label-tertiary)}
+  .note{margin:0 0 12px;color:var(--dsw-alias-label-secondary);font-size:12px}
+  .bar{height:4px;width:100%;background:var(--dsw-alias-border-l2);border-radius:2px;margin:26px 0 0}
+</style>
+</head>
+<body>
+  <main class="stage">
+    <section>
+      <p class="note">常驻行(与「设置」同一行;金额右侧 = OpenCode Go 消耗圆环)</p>
+      <div class="card" style="width:230px">
+        <div class="psb-row">
+          <span class="psb-left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span class="psb-label">设置</span>
+          </span>
+          <span class="psb-amt" role="img" aria-label="DeepSeek 账户 · 余额 ¥4.98">
+            <span class="psb-dot" aria-hidden="true" style="background:var(--dsw-alias-state-success-primary)"></span>
+            <span class="psb-num">¥4.98</span>
+            <svg class="psb-ring" width="16" height="16" viewBox="0 0 18 18" role="img" aria-label="OpenCode Go 套餐已用 8%">
+              <circle cx="9" cy="9" r="6.5" fill="none" stroke="var(--dsw-alias-border-l2)" stroke-width="2.2"/>
+              <circle cx="9" cy="9" r="6.5" fill="none" stroke="var(--dsw-alias-state-success-primary)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="40.84" stroke-dashoffset="37.57" transform="rotate(-90 9 9)"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="note">悬浮卡(磨砂玻璃;模拟数据)</p>
+      <div class="tip-wrap">
+        <div class="psb-tip" role="tooltip">
+          <div class="psb-tip-head">
+            <span class="psb-tip-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h15A1.5 1.5 0 0 1 21 7.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 16.5v-9Z"/><path d="M3 10h18M7 15h4"/></svg>
+              <span>账户概览</span>
+            </span>
+            <button class="psb-refresh" type="button" title="刷新" aria-label="刷新">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>
+            </button>
+          </div>
+          <div class="psb-ds-card">
+            <div class="psb-ds-top">
+              <span class="psb-ds-lbl">DeepSeek 账户</span>
+              <span class="psb-ds-status">可用</span>
+            </div>
+            <div class="psb-ds-amt">
+              <span class="psb-dot" aria-hidden="true" style="background:var(--dsw-alias-state-success-primary)"></span>
+              <span class="sym" aria-hidden="true">¥</span>
+              <span class="psb-num">4.98</span>
+            </div>
+            <div class="psb-ds-sub">
+              <span>充值 <b>¥4.98</b></span>
+              <span>赠送 <b>¥0.00</b></span>
+            </div>
+          </div>
+          <div class="psb-sec-title">OpenCode Go 套餐</div>
+          <div class="psb-go-row">
+            <div class="psb-go-head"><span class="psb-go-name">滚动 (5h)</span><span class="psb-go-pct">23%</span></div>
+            <div class="psb-track"><div class="psb-fill" style="width:23%;background:var(--dsw-alias-state-success-primary)"></div></div>
+            <div class="psb-meta">3小时后重置</div>
+          </div>
+          <div class="psb-go-row">
+            <div class="psb-go-head"><span class="psb-go-name">周</span><span class="psb-go-pct">14%</span></div>
+            <div class="psb-track"><div class="psb-fill" style="width:14%;background:var(--dsw-alias-state-success-primary)"></div></div>
+            <div class="psb-meta">6天后重置</div>
+          </div>
+          <div class="psb-go-row">
+            <div class="psb-go-head"><span class="psb-go-name">月</span><span class="psb-go-pct">8%</span></div>
+            <div class="psb-track"><div class="psb-fill" style="width:8%;background:var(--dsw-alias-state-success-primary)"></div></div>
+            <div class="psb-meta">29天后重置</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="bar"></div>
+</body>
+</html>
