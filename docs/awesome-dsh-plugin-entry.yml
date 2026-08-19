@@ -1,0 +1,20 @@
+# awesome-dsh-plugin 收录条目(代提交用)
+#
+# 规范来源:github.com/awesome-dsh-plugin/awesome-dsh-plugin/contributing.md
+# 提交前需满足(CI 自动检查):
+#   1. 仓库创建满 1 天
+#   2. 仓库提交数 >= 10
+#   3. 声明 dsh.bundle(已满足)
+#   4. 仓库已打 dsh-plugin topic(已满足)
+#
+# 提交方式:fork awesome-dsh-plugin → 新增 data/plugins/zhouchengke2046__dsh-sidebar-balance.yml
+#          → npm ci && node scripts/generate-readme.mjs 重新生成 README → 开 PR
+#
+# 描述注意:只说功能、可被代码核对,不带营销词(维护者会对照源码审)。
+
+url: https://github.com/zhouchengke2046/dsh-sidebar-balance
+name: zhouchengke2046/dsh-sidebar-balance
+category: ui
+description:
+  en: DeepSeek Harness web plugin that shows the DeepSeek API account balance and OpenCode Go plan usage (consumption ring and hover details) in the sidebar footer, plus one-click restart.
+  zh: DSH Web 插件:在侧边栏底部常驻显示 DeepSeek API 余额与 OpenCode Go 套餐用量(消耗圆环 + 悬浮详情),并支持一键重启。
