@@ -31,7 +31,11 @@
 
 ## 🖼️ 预览 / Preview
 
-用模拟数据渲染的独立视觉预览(常驻行 + 悬浮卡,支持系统深浅色):直接打开 [docs/preview.html](docs/preview.html) 查看。
+![dsh-sidebar-balance 界面预览](docs/preview.png)
+
+上方为常驻行(与「设置」同一行,金额右侧带 OpenCode Go 消耗圆环);下方为磨砂玻璃悬浮卡(DeepSeek 余额明细 + Go 三窗口余量)。支持系统深浅色主题。
+
+也可直接打开 [docs/preview.html](docs/preview.html) 查看交互效果。
 
 ## ✨ 特性 / Features
 
